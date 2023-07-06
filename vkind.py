@@ -14,6 +14,9 @@ from backend import vkTools
 # conn = psycopg2.connect(puti)
 conn = psycopg2.connect(dbname="Vkind", user="postgres", password="saruma0", host="127.0.0.1")
 cursor = conn.cursor()
+def create_tables(engine):
+        Base.metadata.drop_all(engine)
+        Base.metadata.create_all(engine)
 
 
 vk = vk_api.VkApi(token=comunity_token)
@@ -59,6 +62,12 @@ class BotInterFace():
                         self.worksheets = self.vk_tools.search_worksheet(self.params, self.offset)
                         
                         worksheet = self.worksheets.pop()
+                        cursor.execute("SELECT worksheet_id FROM Viewed ")
+                        worksheet_id = cursor.fetchone()
+                        for worksheet['id'] in worksheet_id:
+                            if worksheet['id'] == worksheet_id:
+                                return self.worksheets
+                            continue
             
                         # Viewed.objects.filter(profile_id='event.user_id',worksheet_id='worksheet["id"]').exists()
                         
